@@ -97,8 +97,10 @@ public class FindPair
 
                     bestPrice = temp;
                 }
-                else
+                else if(temp > total)
                     end--;
+                else
+                    inner++;
             }
 
             start++;

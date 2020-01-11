@@ -76,4 +76,27 @@ public class FindPairTest
     {
         assert(findPair.findPair(valueSourceItems, valueSourceTotal).isEmpty());
     }
+
+    static Stream<Arguments> itemsTriadArrayProvider()
+    {
+        return Stream.of(
+                Arguments.of(itemsListSample, 2200, new int[]{500, 700, 1000}),
+                Arguments.of(itemsListSample, 2500, new int[]{500, 700, 1000}),
+                Arguments.of(itemsListSample, 2600, new int[]{500, 700, 1400}),
+                Arguments.of(itemsListSample, 2900, new int[]{500, 1000, 1400}),
+                Arguments.of(itemsListSample, 3100, new int[]{700, 1000, 1400}),
+                Arguments.of(itemsListSample, 9300, new int[]{1000, 2000, 6000}),
+                Arguments.of(itemsListSample, 11500, new int[]{1400, 2000, 6000})
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("itemsTriadArrayProvider")
+    void findTriad(FindPair.Item[] valueSourceItems, int valueSourceTotal, int[] result)
+    {
+        var items = findPair.findTriad(valueSourceItems, valueSourceTotal).get();
+
+        assertEquals(result[0], items[0].price);
+        assertEquals(result[1], items[1].price);
+    }
 }

@@ -23,7 +23,10 @@ public class FindPair
     {
         FindPair m = new FindPair();
 
-        m.findPair("./prices.txt", 2500);
+        if(args[0].equals("--bonus"))
+            m.findTriad(args[1], Integer.parseInt(args[2]));
+        else
+            m.findPair(args[0], Integer.parseInt(args[1]));
     }
 
     void findPair(String fileName, int price)
@@ -54,6 +57,50 @@ public class FindPair
             }
             else
                 end--;
+        }
+
+        if(gifts[0] == null)
+            return Optional.empty();
+
+        return Optional.of(gifts);
+    }
+
+    void findTriad(String fileName, int price)
+    {
+        var items = parseItems(readFile(fileName));
+
+        findTriad(items, price).ifPresentOrElse(gifts -> {
+            for(Item gift : gifts)
+                System.out.println(gift.name + ", " + gift.price);
+        }, () -> System.out.println("Not possible."));
+    }
+
+    Optional<Item[]> findTriad(Item[] items, int total)
+    {
+        var gifts = new Item[3];
+        int start, bestPrice, temp; start = bestPrice = 0;
+        int inner = 1;
+        int end = items.length - 1;
+
+        while(start < end)
+        {
+            while(inner < end)
+            {
+                temp = items[start].price + items[inner].price + items[end].price;
+                if(temp <= total && temp > bestPrice)
+                {
+                    gifts[0] = items[start];
+                    gifts[1] = items[inner++];
+                    gifts[2] = items[end];
+
+                    bestPrice = temp;
+                }
+                else
+                    end--;
+            }
+
+            start++;
+            inner = start + 1;
         }
 
         if(gifts[0] == null)
@@ -111,5 +158,4 @@ public class FindPair
 
         return itemList;
     }
-
 }

@@ -10,7 +10,9 @@
 
     <groupId>com.soliduslabs</groupId>
     <artifactId>find-pair</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1.0-RELEASE</version>
+    <name>find-pair</name>
+    <description>Problem 2</description>
 
     <build>
         <plugins>

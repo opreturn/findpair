@@ -40,7 +40,12 @@ public class FindPairTest
                 Arguments.of(new FindPair.Item[] {
                         new FindPair.Item("item", 500),
                         new FindPair.Item("item", 700),
-                }, 5000, new int[]{500, 700})
+                }, 5000, new int[]{500, 700}),
+                Arguments.of(new FindPair.Item[] {
+                        new FindPair.Item("item", 500),
+                        new FindPair.Item("item", 700),
+                        new FindPair.Item("item", 1000),
+                }, 5000, new int[]{700, 1000})
         );
     }
 
@@ -52,5 +57,23 @@ public class FindPairTest
 
         assertEquals(result[0], items[0].price);
         assertEquals(result[1], items[1].price);
+    }
+
+    static Stream<Arguments> notPossibleArrayProvider()
+    {
+        return Stream.of(
+                Arguments.of(itemsListSample, 1100),
+                Arguments.of(new FindPair.Item[] {}, 5000),
+                Arguments.of(new FindPair.Item[] {
+                        new FindPair.Item("item", 500),
+                }, 5000)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("notPossibleArrayProvider")
+    void findPair_NotPossible(FindPair.Item[] valueSourceItems, int valueSourceTotal)
+    {
+        assert(findPair.findPair(valueSourceItems, valueSourceTotal).isEmpty());
     }
 }

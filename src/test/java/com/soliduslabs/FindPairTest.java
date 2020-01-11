@@ -1,0 +1,56 @@
+package com.soliduslabs;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.stream.Stream;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class FindPairTest
+{
+    private final FindPair findPair = new FindPair();
+
+    static FindPair.Item[] itemsListSample;
+
+    @BeforeAll
+    public static void init()
+    {
+        System.out.println("BeforeAll init() method called");
+
+        itemsListSample = new FindPair.Item[]{
+                new FindPair.Item("item", 500),
+                new FindPair.Item("item", 700),
+                new FindPair.Item("item", 1000),
+                new FindPair.Item("item", 1400),
+                new FindPair.Item("item", 2000),
+                new FindPair.Item("item", 6000)
+        };
+    }
+
+    static Stream<Arguments> itemsArrayProvider()
+    {
+        return Stream.of(
+                Arguments.of(itemsListSample, 2500, new int[]{500, 2000}),
+                Arguments.of(itemsListSample, 2300, new int[]{700, 1400}),
+                Arguments.of(itemsListSample, 10000, new int[]{2000, 6000}),
+
+                Arguments.of(new FindPair.Item[] {
+                        new FindPair.Item("item", 500),
+                        new FindPair.Item("item", 700),
+                }, 5000, new int[]{500, 700})
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("itemsArrayProvider")
+    void findPair(FindPair.Item[] valueSourceItems, int valueSourceTotal, int[] result)
+    {
+        var items = findPair.findPair(valueSourceItems, valueSourceTotal).get();
+
+        assertEquals(result[0], items[0].price);
+        assertEquals(result[1], items[1].price);
+    }
+}

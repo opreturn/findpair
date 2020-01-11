@@ -1,7 +1,9 @@
-import java.io.IOException;
+import java.io.BufferedReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 public class FindPair
 {
@@ -28,15 +30,13 @@ public class FindPair
     {
         var items = parseItems(readFile(fileName));
 
-        var gifts = findPair(items, price);
-
-        for(Item gift: gifts)
-        {
-            System.out.println(gift.name + ", " + gift.price);
-        }
+        findPair(items, price).ifPresentOrElse(gifts -> {
+            for(Item gift : gifts)
+                System.out.println(gift.name + ", " + gift.price);
+        }, () -> System.out.println("Not possible."));
     }
 
-    Item[] findPair(Item[] items, int total)//O(n)
+    Optional<Item[]> findPair(Item[] items, int total)//O(n)
     {
         var gifts = new Item[2];
         int start, bestPrice, temp; start = bestPrice = 0;
@@ -56,9 +56,13 @@ public class FindPair
                 end--;
         }
 
-        return gifts;
+        if(gifts[0] == null)
+            return Optional.empty();
+
+        return Optional.of(gifts);
     }
 
+    /*
     List<String> readFile(String fileName)
     {
         List<String> lines = null;
@@ -68,6 +72,27 @@ public class FindPair
             lines = Files.readAllLines(Paths.get(fileName));
 
         } catch (IOException e) {
+            System.err.println("Error reading from file. Exiting the program...");
+            System.exit(2);
+        }
+
+        return lines;
+    }
+     */
+
+    List<String> readFile(String fileName)
+    {
+        var lines = new LinkedList<String>();
+
+        try(BufferedReader reader = Files.newBufferedReader(Paths.get(fileName)))
+        {
+            String line;
+            while((line = reader.readLine()) != null)
+            {
+                //System.out.println(line);
+                lines.add(line);
+            }
+        } catch(Exception e) {
             System.err.println("Error reading from file. Exiting the program...");
             System.exit(2);
         }

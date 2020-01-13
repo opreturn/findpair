@@ -1,0 +1,1 @@
+java -jar target/find-pair-0.1.0-RELEASE.jar $1 $2 $3
